@@ -329,7 +329,7 @@ public class PeriodicJob extends JobService {
         try {
             conn = (HttpURLConnection) fetchData(path);
             conn.setRequestMethod("HEAD");
-            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+            return (conn.getResponseCode() == HttpURLConnection.HTTP_OK);
         } catch (IOException e) {
             e.printStackTrace();
             return false;
