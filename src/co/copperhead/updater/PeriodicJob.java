@@ -91,7 +91,7 @@ public class PeriodicJob extends JobService {
         final int networkType = Settings.getNetworkType(context);
         final boolean batteryNotLow = Settings.getBatteryNotLow(context);
         final JobScheduler scheduler = context.getSystemService(JobScheduler.class);
-        if (isRunning(context)) {
+        if (scheduler.getPendingJob(JOB_ID_DOWNLOAD_UPDATE) != null) {
             Log.d(TAG, "updater already running, ignoring request");
         } else {
             PersistableBundle extras = new PersistableBundle();
@@ -111,7 +111,7 @@ public class PeriodicJob extends JobService {
 
     static void scheduleInstall(final Context context) {
         final JobScheduler scheduler = context.getSystemService(JobScheduler.class);
-        if (isRunning(context)) {
+        if (scheduler.getPendingJob(JOB_ID_INSTALL_UPDATE) != null) {
             Log.d(TAG, "updater already running, ignoring request");
         } else {
             final ComponentName service = new ComponentName(context, PeriodicJob.class);
