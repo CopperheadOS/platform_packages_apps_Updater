@@ -40,4 +40,8 @@
             android:title="@string/idle_reboot_title"
             android:summary="@string/idle_reboot_summary" />
 
+    <SwitchPreference android:key="messaging_opt_out"
+        android:title="@string/changelog_opt_out_title"
+        android:summary="@string/changelog_opt_out_summary" />
+
 </PreferenceScreen>

@@ -20,6 +20,7 @@ public class Settings extends PreferenceActivity {
     static final String KEY_WAITING_FOR_REBOOT = "waiting_for_reboot";
     private static final String KEY_CHECK_FOR_UPDATES = "check_for_updates";
     private static final String KEY_INTERVAL = "check_for_updates_interval";
+    private static final String KEY_MESSAGING_OPT_OUT = "messaging_opt_out";
 
     static final String PREFERENCE_CHANNEL = "channel";
 
@@ -101,6 +102,13 @@ public class Settings extends PreferenceActivity {
             }
             return true;
         });
+
+        final Preference messagingOptOut = findPreference(KEY_MESSAGING_OPT_OUT);
+        messagingOptOut.setOnPreferenceChangeListener((final Preference preference, final Object newValue) -> {
+            final boolean value = (Boolean) newValue;
+            android.provider.Settings.Global.putInt(getContentResolver(), KEY_MESSAGING_OPT_OUT, value ? 1 : 0);
+            return true;
+       });
     }
 
     @Override

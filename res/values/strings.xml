@@ -54,6 +54,9 @@
     <string name="pause_button">Pause</string>
     <string name="resume_button">Resume</string>
 
+    <string name="changelog_opt_out_title">Messaging opt-out</string>
+    <string name="changelog_opt_out_summary">Disable the pop-up messaging dialog from updates</string>
+
     <plurals name="eta_seconds">
         <item quantity="one">1 second left</item>
         <item quantity="other">
