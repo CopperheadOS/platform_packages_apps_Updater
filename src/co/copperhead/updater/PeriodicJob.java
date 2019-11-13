@@ -82,7 +82,6 @@ public class PeriodicJob extends JobService {
     private NotificationCompat.BigTextStyle mNotificationStyle = null;
 
     private DownloadClient mDownloadClient;
-    private String mUpdatePath;
 
     static boolean isAbUpdate() {
         return SystemProperties.getBoolean("ro.build.ab_update", false);
@@ -236,7 +235,6 @@ public class PeriodicJob extends JobService {
         if (params.getJobId() == JOB_ID_DOWNLOAD_UPDATE) {
             IntentFilter filter = new IntentFilter(PAUSE_INTENT_ACTION);
             registerReceiver(mReceiver, filter);
-            mUpdatePath = params.getExtras().getString("update_path");
             downloadUpdate(params, params.getExtras().getBoolean("resume", false));
         } else if (params.getJobId() == JOB_ID_CHECK_FOR_UPDATES) {
             new Thread(new Runnable() {
@@ -321,6 +319,7 @@ public class PeriodicJob extends JobService {
         final HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
         urlConnection.setReadTimeout(READ_TIMEOUT);
+        urlConnection.setUseCaches(false);
         return urlConnection;
     }
 
@@ -348,8 +347,10 @@ public class PeriodicJob extends JobService {
         try {
             conn = fetchData(DEVICE + "-" + channel);
             InputStream input = conn.getInputStream();
+            Log.d(TAG, "response - " + conn.getResponseCode());
             final BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            final String[] metadata = reader.readLine().split(" ");
+            final String meta = reader.readLine();
+            final String[] metadata = meta.split(" ");
             reader.close();
 
             final String targetIncremental = metadata[0];
@@ -382,6 +383,7 @@ public class PeriodicJob extends JobService {
 
             Intent downloadIntent = new Intent(this, UpdateReceiver.class);
             downloadIntent.setAction(UpdateReceiver.DOWNLOAD_UPDATE_ACTION);
+            preferences.edit().putString("update_path", updatePath).apply();
             downloadIntent.putExtra("update_path", updatePath);
 
             final NotificationChannel notifChannel = new NotificationChannel(NOTIFICATION_CHANNEL,
@@ -603,9 +605,12 @@ public class PeriodicJob extends JobService {
             }
         };
 
+        String updateFile = Settings.getPreferences(this).getString("update_path", "unknown");
+        Log.d(TAG, "updateFile - " + updateFile);
+
         try {
             mDownloadClient = new DownloadClient.Builder()
-                    .setUrl(getUrl(mUpdatePath))
+                    .setUrl(getUrl(updateFile))
                     .setDestination(UPDATE_PATH)
                     .setDownloadCallback(downloadCallback)
                     .setProgressListener(progressListener)
@@ -655,7 +660,6 @@ public class PeriodicJob extends JobService {
     private PendingIntent getResumePendingIntent() {
         Intent resume = new Intent(this, UpdateReceiver.class);
         resume.setAction(UpdateReceiver.RESUME_DOWNLOAD_ACTION);
-        resume.putExtra("update_path", mUpdatePath);
         return PendingIntent.getBroadcast(this, 0, resume, 0);
     }
 
