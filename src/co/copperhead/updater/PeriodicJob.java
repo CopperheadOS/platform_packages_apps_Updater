@@ -30,10 +30,11 @@ import android.os.PersistableBundle;
 import android.os.RecoverySystem;
 import android.os.SystemClock;
 import android.os.SystemProperties;
-import android.support.v4.app.NotificationCompat;
 import android.text.format.Formatter;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.core.app.NotificationCompat;
 
 import co.copperhead.updater.download.DownloadClient;
 import co.copperhead.updater.download.DownloadClient.Headers;

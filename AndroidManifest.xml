@@ -52,6 +52,7 @@
                 android:launchMode="singleTop"
                 android:label="@string/settings_title"
                 android:excludeFromRecents="true"
+                android:theme="@style/Theme.AppCompat.Light"
                 android:directBootAware="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
