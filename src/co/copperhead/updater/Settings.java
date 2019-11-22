@@ -10,12 +10,13 @@ import android.widget.Toast;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 
-public class Settings extends AppCompatActivity {
+public class Settings extends FragmentActivity {
     private static final int DEFAULT_NETWORK_TYPE = JobInfo.NETWORK_TYPE_UNMETERED;
     private static final String KEY_NETWORK_TYPE = "network_type";
     static final String KEY_BATTERY_NOT_LOW = "battery_not_low";
@@ -54,7 +55,7 @@ public class Settings extends AppCompatActivity {
             throw new SecurityException("system user only");
         }
         setContentView(R.layout.activity_settings);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.settings_container, new SettingsFragment())
                 .commit();
